@@ -2,7 +2,7 @@ package com.aadamss.auctionhouse.marshaller
 
 import com.aadamss.auctionhouse.actors.Auctions._
 import com.aadamss.auctionhouse.actors.AuctionHouse._
-import com.aadamss.auctionhouse.responses.Responses._
+import com.aadamss.auctionhouse.response.Response._
 import akka.http.scaladsl.model.DateTime
 import com.aadamss.auctionhouse.actors.Auctions
 import spray.json._

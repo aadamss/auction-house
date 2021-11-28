@@ -1,9 +1,9 @@
-package com.aadamss.auctionhouse.responses
+package com.aadamss.auctionhouse.response
 
 import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import com.aadamss.auctionhouse.actors.{Auctions, AuctionHouse}
 
-object Responses {
+object Response {
 
   import StatusCodes._
 

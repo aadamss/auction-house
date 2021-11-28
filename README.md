@@ -18,7 +18,7 @@ with `Postman`, for example.
 ### Running the tests
 - In order to run the tests for the project run `sbt test`
 
-## Project functionalities
+## API Endpoints
 The project has multiple API endpoints that can be tested, instructions are provided below.\
 Every endpoint will be tested with `Postman`.
 
@@ -31,8 +31,8 @@ The request body should be raw JSON with the correct format:
 {
 	"item": "BMW-M5-CS",
 	"incrementPolicy": {
-		"key": "MinimalIncrement",
-		"min": 10000
+		"incrementType": "MinimalIncrement",
+		"minimumBid": 10000
 	},
 	"startingPrice": 125000,
 	"startDate": "2021-12-31T12:00:00",
@@ -62,7 +62,7 @@ The request body should be raw JSON with the correct format:
 {
 	"startingPrice": 150000,
 	"incrementPolicy": {
-		"key": "FreeIncrement"
+		"incrementType": "FreeIncrement"
 	},
 	"startDate": "2021-12-31T12:00:00",
 	"endDate": "2022-01-31T12:00:00"

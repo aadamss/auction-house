@@ -3,7 +3,7 @@ package com.aadamss.auctionhouse.actors
 import com.aadamss.auctionhouse.actors.Auctions.IncrementPolicy
 import akka.actor.{Actor, Props}
 import akka.http.scaladsl.model.DateTime
-import com.aadamss.auctionhouse.responses.Responses._
+import com.aadamss.auctionhouse.response.Response._
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -20,21 +20,16 @@ object Auctions {
   )
 
   case class Bidder(name: String)
-
   case class Bid(bidderName: String, value: Int)
-
   case class WinningBid(bidder: Bidder, bid: Bid)
 
   sealed abstract class AuctionState(val key: String)
 
   case object Upcoming extends AuctionState("Upcoming")
-
   case object Open extends AuctionState("Open")
-
   case object Ended extends AuctionState("Ended")
 
-  val availableAuctionStates: Vector[AuctionState] =
-    Vector(Upcoming, Open, Ended)
+  val availableAuctionStates: Vector[AuctionState] = Vector(Upcoming, Open, Ended)
 
   sealed abstract class IncrementPolicy(val incrementType: String)
   case object FreeIncrement extends IncrementPolicy("FreeIncrement")
@@ -42,14 +37,12 @@ object Auctions {
 
   case object Get
   case object UpdateState
-
   case class Update(
     startingPrice: Option[Int] = None,
     incrementPolicy: Option[IncrementPolicy] = None,
     startDate: Option[DateTime] = None,
     endDate: Option[DateTime] = None,
   )
-
   case class Join(username: String)
   case class PlaceBid(username: String, bid: Int)
 

@@ -5,7 +5,7 @@ import akka.actor.{Actor, ActorRef, Props}
 import akka.http.scaladsl.model.DateTime
 import akka.util.Timeout
 import akka.pattern.{ask, pipe}
-import com.aadamss.auctionhouse.responses.Responses._
+import com.aadamss.auctionhouse.response.Response._
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 

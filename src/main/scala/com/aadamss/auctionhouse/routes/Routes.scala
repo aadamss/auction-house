@@ -8,7 +8,7 @@ import akka.pattern.ask
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import com.aadamss.auctionhouse.actors.AuctionHouse._
 import com.aadamss.auctionhouse.marshaller.Marshaller
-import com.aadamss.auctionhouse.responses.Responses._
+import com.aadamss.auctionhouse.response.Response._
 
 import scala.concurrent.ExecutionContext
 
