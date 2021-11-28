@@ -8,14 +8,15 @@ import scala.annotation.tailrec
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-
 object Auctions {
-  def props(item: String,
-             startingPrice: Int,
-             incrementPolicy: IncrementPolicy,
-             startDate: DateTime,
-             endDate: DateTime): Props = Props(
-    new Auctions(item, startingPrice, incrementPolicy, startDate, endDate)
+  def props(
+    item: String,
+    startingPrice: Int,
+    incrementPolicy: IncrementPolicy,
+    startDate: DateTime,
+    endDate: DateTime,
+  ): Props = Props(
+    new Auctions(item, startingPrice, incrementPolicy, startDate, endDate),
   )
 
   case class Bidder(name: String)
@@ -37,27 +38,30 @@ object Auctions {
 
   sealed abstract class IncrementPolicy(val incrementType: String)
   case object FreeIncrement extends IncrementPolicy("FreeIncrement")
-  case class MinimumIncrement(minimumBid: Int)
-    extends IncrementPolicy("MinimumIncrement")
+  case class MinimumIncrement(minimumBid: Int) extends IncrementPolicy("MinimumIncrement")
 
   case object Get
   case object UpdateState
 
-  case class Update(startingPrice: Option[Int] = None,
-                     incrementPolicy: Option[IncrementPolicy] = None,
-                     startDate: Option[DateTime] = None,
-                     endDate: Option[DateTime] = None)
+  case class Update(
+    startingPrice: Option[Int] = None,
+    incrementPolicy: Option[IncrementPolicy] = None,
+    startDate: Option[DateTime] = None,
+    endDate: Option[DateTime] = None,
+  )
 
   case class Join(username: String)
   case class PlaceBid(username: String, bid: Int)
 
 }
 
-class Auctions(item: String,
-               var startingPrice: Int,
-               var incrementPolicy: IncrementPolicy,
-               var startDate: DateTime,
-               var endDate: DateTime) extends Actor {
+class Auctions(
+  item: String,
+  var startingPrice: Int,
+  var incrementPolicy: IncrementPolicy,
+  var startDate: DateTime,
+  var endDate: DateTime,
+) extends Actor {
 
   import Auctions._
   import context._
@@ -83,7 +87,7 @@ class Auctions(item: String,
       endDate,
       bidders,
       bids.toVector,
-      winner
+      winner,
     )
 
   def updateAuctionState(): Unit =
@@ -116,11 +120,7 @@ class Auctions(item: String,
 
     case UpdateState => updateAuctionState()
 
-    case Update(
-    newStartingPrice,
-    newIncrementPolicy,
-    newStartDate,
-    newEndDate) =>
+    case Update(newStartingPrice, newIncrementPolicy, newStartDate, newEndDate) =>
       auctionState match {
         case Upcoming =>
           newStartingPrice match {
@@ -147,8 +147,8 @@ class Auctions(item: String,
 
       auctionState match {
         case Open if !bidders.contains(newBidder) => sender() ! addBidder()
-        case Open => sender() ! BidderAlreadyJoined(newBidder)
-        case _      => sender() ! NotPermittedByState(auctionState)
+        case Open                                 => sender() ! BidderAlreadyJoined(newBidder)
+        case _                                    => sender() ! NotPermittedByState(auctionState)
       }
 
     case PlaceBid(username, bid) =>
@@ -167,11 +167,10 @@ class Auctions(item: String,
             (incrementPolicy, bids) match {
               case (FreeIncrement, highestBid :: _) if bid > highestBid.value =>
                 sender() ! addBid()
-              case (MinimumIncrement(minimumBid), highestBid :: _)
-                if bid >= highestBid.value + minimumBid =>
+              case (MinimumIncrement(minimumBid), highestBid :: _) if bid >= highestBid.value + minimumBid =>
                 sender() ! addBid()
               case (_, List()) if bid >= startingPrice => sender() ! addBid()
-              case _ => sender() ! BidTooLow(bid)
+              case _                                   => sender() ! BidTooLow(bid)
             }
         case _ => sender() ! NotPermittedByState(auctionState)
       }

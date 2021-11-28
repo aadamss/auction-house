@@ -14,31 +14,37 @@ object AuctionHouse {
 
   def name = "auctionHouse"
 
-  case class Auction(item: String,
-                     startingPrice: Int,
-                     incrementPolicy: IncrementPolicy,
-                     auctionState: Auctions.AuctionState,
-                     startDate: DateTime,
-                     endDate: DateTime,
-                     bidders: Set[Auctions.Bidder],
-                     bids: Vector[Auctions.Bid],
-                     winningBid: Option[WinningBid])
+  case class Auction(
+    item: String,
+    startingPrice: Int,
+    incrementPolicy: IncrementPolicy,
+    auctionState: Auctions.AuctionState,
+    startDate: DateTime,
+    endDate: DateTime,
+    bidders: Set[Auctions.Bidder],
+    bids: Vector[Auctions.Bid],
+    winningBid: Option[WinningBid],
+  )
 
-  case class CreateAuction(item: String,
-                            startingPrice: Int,
-                            incrementPolicy: IncrementPolicy,
-                            startDate: DateTime,
-                            endDate: DateTime)
+  case class CreateAuction(
+    item: String,
+    startingPrice: Int,
+    incrementPolicy: IncrementPolicy,
+    startDate: DateTime,
+    endDate: DateTime,
+  )
 
   case object GetAuctions
 
   case class GetAuction(item: String)
 
-  case class UpdateAuction(item: String,
-                            startingPrice: Option[Int],
-                            incrementPolicy: Option[IncrementPolicy],
-                            startDate: Option[DateTime],
-                            endDate: Option[DateTime])
+  case class UpdateAuction(
+    item: String,
+    startingPrice: Option[Int],
+    incrementPolicy: Option[IncrementPolicy],
+    startDate: Option[DateTime],
+    endDate: Option[DateTime],
+  )
 
   case class JoinAuction(item: String, bidderName: String)
 
@@ -51,19 +57,17 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
   import AuctionHouse._
   import context._
 
-  def createAuction(item: String,
-                     startingPrice: Int,
-                     incrementPolicy: IncrementPolicy,
-                     startDate: DateTime,
-                     endDate: DateTime): ActorRef =
+  def createAuction(
+    item: String,
+    startingPrice: Int,
+    incrementPolicy: IncrementPolicy,
+    startDate: DateTime,
+    endDate: DateTime,
+  ): ActorRef =
     context.actorOf(Auctions.props(item, startingPrice, incrementPolicy, startDate, endDate), item)
 
   def receive: PartialFunction[Any, Unit] = {
-    case CreateAuction(item,
-    startingPrice,
-    incrementPolicy,
-    startDate,
-    endDate) =>
+    case CreateAuction(item, startingPrice, incrementPolicy, startDate, endDate) =>
       if (startingPrice < 0) sender() ! NegativeStartingPrice(startingPrice)
       else
         context.child(item) match {
@@ -75,10 +79,10 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
                 startingPrice,
                 incrementPolicy,
                 startDate,
-                endDate
+                endDate,
               ).ask(Auctions.Get)
                 .mapTo[AuctionFound]
-                .map { af => AuctionCreated(af.auction) }
+                .map(af => AuctionCreated(af.auction))
 
             pipe(futureAuction) to sender()
         }
@@ -88,13 +92,11 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
         Future sequence {
           for {
             child <- context.children
-          } yield {
-            self
-              .ask(GetAuction(child.path.name))
-              .mapTo[AuctionFound]
-              .map { af => Success(af.auction) }
-              .recover { case e => Failure(e) }
-          }
+          } yield self
+            .ask(GetAuction(child.path.name))
+            .mapTo[AuctionFound]
+            .map(af => Success(af.auction))
+            .recover { case e => Failure(e) }
         } map { f => AuctionsFound(f.filter(_.isSuccess).map(_.get).toSet) }
 
       pipe(getAuctions) to sender()
@@ -105,37 +107,37 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
         .fold(sender() ! AuctionNotFound(item))(_ forward Auctions.Get)
 
     case UpdateAuction(
-    item,
-    startingPrice,
-    incrementPolicy,
-    startDate,
-    endDate
-    ) =>
+          item,
+          startingPrice,
+          incrementPolicy,
+          startDate,
+          endDate,
+        ) =>
       context
         .child(item)
         .fold(
-          sender() ! AuctionNotFound(item)
+          sender() ! AuctionNotFound(item),
         )(
           _ forward Auctions
-            .Update(startingPrice, incrementPolicy, startDate, endDate)
+            .Update(startingPrice, incrementPolicy, startDate, endDate),
         )
 
     case JoinAuction(item, username) =>
       context
         .child(item)
         .fold(
-          sender() ! AuctionNotFound(item)
+          sender() ! AuctionNotFound(item),
         )(
-          _ forward Auctions.Join(username)
+          _ forward Auctions.Join(username),
         )
 
     case PlaceBid(item, username, bid) =>
       context
         .child(item)
         .fold(
-          sender() ! AuctionNotFound(item)
+          sender() ! AuctionNotFound(item),
         )(
-          _ forward Auctions.PlaceBid(username, bid)
+          _ forward Auctions.PlaceBid(username, bid),
         )
   }
 }

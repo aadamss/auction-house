@@ -9,16 +9,20 @@ import spray.json._
 
 trait Marshaller extends DefaultJsonProtocol {
 
-  case class CreateAuctionParams(item: String,
-                                  startingPrice: Int,
-                                  incrementPolicy: IncrementPolicy,
-                                  startDate: DateTime,
-                                  endDate: DateTime)
+  case class CreateAuctionParams(
+    item: String,
+    startingPrice: Int,
+    incrementPolicy: IncrementPolicy,
+    startDate: DateTime,
+    endDate: DateTime,
+  )
 
-  case class UpdateAuctionParams(startingPrice: Option[Int],
-                                  incrementPolicy: Option[IncrementPolicy],
-                                  startDate: Option[DateTime],
-                                  endDate: Option[DateTime])
+  case class UpdateAuctionParams(
+    startingPrice: Option[Int],
+    incrementPolicy: Option[IncrementPolicy],
+    startDate: Option[DateTime],
+    endDate: Option[DateTime],
+  )
 
   case class JoinAuctionParams(bidderName: String)
   case class PlaceBidParams(value: Int)
@@ -27,11 +31,12 @@ trait Marshaller extends DefaultJsonProtocol {
     def write(dateTime: DateTime): JsString = JsString(dateTime.toIsoDateTimeString)
 
     def read(json: JsValue): DateTime = json match {
-      case JsString(value) => DateTime.fromIsoDateTimeString(value) match {
-        case Some(dateTime) => dateTime
-        case None => deserializationError("Parsing of string as DateTime failed!")
-      }
-      case _               => deserializationError("Failed to find a String for DateTime!")
+      case JsString(value) =>
+        DateTime.fromIsoDateTimeString(value) match {
+          case Some(dateTime) => dateTime
+          case None           => deserializationError("Parsing of string as DateTime failed!")
+        }
+      case _ => deserializationError("Failed to find a String for DateTime!")
     }
   }
 
@@ -42,14 +47,13 @@ trait Marshaller extends DefaultJsonProtocol {
       case JsString(value) =>
         Auctions.availableAuctionStates.find(_.key == value) match {
           case Some(state) => state
-          case None     => deserializationError("Auction state not found!")
+          case None        => deserializationError("Auction state not found!")
         }
       case _ => deserializationError("Auction state expected!")
     }
   }
 
-  implicit object IncrementPolicyFormat
-    extends RootJsonFormat[IncrementPolicy] {
+  implicit object IncrementPolicyFormat extends RootJsonFormat[IncrementPolicy] {
     def write(incrementPolicy: IncrementPolicy): JsValue = {
       val base = Map("incrementType" -> JsString(incrementPolicy.incrementType))
       incrementPolicy match {

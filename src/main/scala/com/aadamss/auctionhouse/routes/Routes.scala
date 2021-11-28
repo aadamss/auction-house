@@ -28,7 +28,7 @@ trait Routes extends Marshaller {
   def handleExceptions(r: Response): StandardRoute =
     r match {
       case e: ErrorResponse => complete(e.statusCode, e)
-      case _ => complete(UnknownError().statusCode, UnknownError().message)
+      case _                => complete(UnknownError().statusCode, UnknownError().message)
     }
 
   def auctionsRoute: Route =
@@ -44,20 +44,20 @@ trait Routes extends Marshaller {
                     params.startingPrice,
                     params.incrementPolicy,
                     params.startDate,
-                    params.endDate
-                  )
+                    params.endDate,
+                  ),
                 )
-                .mapTo[Response]
+                .mapTo[Response],
             ) {
               case s: AuctionCreated => complete(s.statusCode, s.auction)
-              case r => handleExceptions(r)
+              case r                 => handleExceptions(r)
             }
           }
         } ~
           get {
             onSuccess(auctionHouse.ask(GetAuctions).mapTo[Response]) {
               case s: AuctionsFound => complete(s.statusCode, s.auctions)
-              case r => handleExceptions(r)
+              case r                => handleExceptions(r)
             }
           }
       }
@@ -70,7 +70,7 @@ trait Routes extends Marshaller {
         get {
           onSuccess(auctionHouse.ask(GetAuction(item)).mapTo[Response]) {
             case s: AuctionFound => complete(s.statusCode, s.auction)
-            case r => handleExceptions(r)
+            case r               => handleExceptions(r)
           }
         } ~
           patch {
@@ -83,13 +83,13 @@ trait Routes extends Marshaller {
                       params.startingPrice,
                       params.incrementPolicy,
                       params.startDate,
-                      params.endDate
-                    )
+                      params.endDate,
+                    ),
                   )
-                  .mapTo[Response]
+                  .mapTo[Response],
               ) {
                 case s: AuctionUpdated => complete(s.statusCode, s.auction)
-                case r => handleExceptions(r)
+                case r                 => handleExceptions(r)
               }
             }
           }
@@ -104,10 +104,10 @@ trait Routes extends Marshaller {
             onSuccess(
               auctionHouse
                 .ask(JoinAuction(item, params.bidderName))
-                .mapTo[Response]
+                .mapTo[Response],
             ) {
               case s: AuctionJoined => complete(s.statusCode, s.bidder)
-              case r => handleExceptions(r)
+              case r                => handleExceptions(r)
             }
           }
         }
@@ -115,21 +115,20 @@ trait Routes extends Marshaller {
     }
 
   def bidRoute: Route =
-    pathPrefix("auctions" / Segment / "bidders" / Segment / "bids") {
-      (item, bidder) =>
-        pathEndOrSingleSlash {
-          post {
-            entity(as[PlaceBidParams]) { params =>
-              onSuccess(
-                auctionHouse
-                  .ask(PlaceBid(item, bidder, params.value))
-                  .mapTo[Response]
-              ) {
-                case s: BidPlaced => complete(s.statusCode, s.bid)
-                case r => handleExceptions(r)
-              }
+    pathPrefix("auctions" / Segment / "bidders" / Segment / "bids") { (item, bidder) =>
+      pathEndOrSingleSlash {
+        post {
+          entity(as[PlaceBidParams]) { params =>
+            onSuccess(
+              auctionHouse
+                .ask(PlaceBid(item, bidder, params.value))
+                .mapTo[Response],
+            ) {
+              case s: BidPlaced => complete(s.statusCode, s.bid)
+              case r            => handleExceptions(r)
             }
           }
         }
+      }
     }
 }
