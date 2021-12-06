@@ -17,6 +17,8 @@ with `Postman`, for example.
 
 ### Running the tests
 - In order to run the tests for the project run `sbt test`
+- In order to run the tests with `scoverage` plugin, run `sbt clean coverage test`
+- In order to generate the coverage report, run `sbt coverageReport`
 
 ## API Endpoints
 The project has multiple API endpoints that can be tested, instructions are provided below.\
@@ -96,8 +98,8 @@ The request body should be raw JSON with the correct format:
 - **_SBT_** version `1.5.5`
 - **_Akka_** version `2.6.17`
 - **_AkkaHttp_** version `10.2.7`
-- **_ScalaTest_** version `3.2.10`
 - **_SprayJson_** Akka Integration version `10.2.7`
+- **_ScalaTest_** version `3.2.10`
 
 ## Future plans
 If this project will be developed further, I am planning to add some additional features such as:
