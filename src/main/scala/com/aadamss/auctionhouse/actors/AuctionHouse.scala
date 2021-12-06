@@ -71,7 +71,7 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
       if (startingPrice < 0) sender() ! NegativeStartingPrice(startingPrice)
       else
         context.child(item) match {
-          case Some(_) => sender() ! AuctionAlreadyExist(item)
+          case Some(_) => sender() ! AuctionAlreadyExists(item)
           case None =>
             val futureAuction =
               createAuction(

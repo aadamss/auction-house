@@ -25,7 +25,7 @@ object Response {
 
   sealed class ErrorResponse(val message: String, val statusCode: StatusCode) extends Response
 
-  case class AuctionAlreadyExist(item: String)
+  case class AuctionAlreadyExists(item: String)
       extends ErrorResponse(
         s"The $item already exists in an auction!",
         UnprocessableEntity,
