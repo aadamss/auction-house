@@ -5,9 +5,9 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.Materializer
 import akka.util.Timeout
-import com.typesafe.config.{Config, ConfigFactory}
 import api.RequestTimeout
 import com.aadamss.auctionhouse.routes.RestRoutes
+import com.typesafe.config.{Config, ConfigFactory}
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
 object Main extends App with RestRoutes with RequestTimeout {

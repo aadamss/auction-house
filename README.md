@@ -4,16 +4,16 @@
 
 ### What is an auction?
 An auction is a process of buying and selling goods or services by offering them up for bids,\
-taking bids, and then selling the item to the highest bidder or buying the item from the lowest bidder.
+taking bids, and then selling the item to the highest bidder.
 
 ### How this works?
-The project has only the backend part without a frontend, so the APIs can be tested\
+The project has only the backend part without a frontend, so the API endpoints can be tested\
 with `Postman`, for example.
 
 ### Preparing and starting the project
 - Clone the repository on your local machine
 - Inside the project repository, you can run it using `sbt run`
-- The API server will become available at `http://localhost:1337`
+- The API server will become available at `http://localhost:9000`
 
 ### Running the tests
 - In order to run the tests for the project run `sbt test`
@@ -24,7 +24,7 @@ Every endpoint will be tested with `Postman`.
 
 ### Creating an auction
 In order to create a new auction with the endpoint, open `Postman` and create a new request\
-with a `POST` method to `http://localhost:1337/auctions` in the request URL.\
+with a `POST` method to `http://localhost:9000/auctions` in the request URL.\
 Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```
@@ -44,18 +44,18 @@ will cause an error.
 
 ### Retrieve currently listed auctions
 In order to get a list of all currently listed and active auctions, open `Postman` and create a new\
-request with a `GET` method to `http://localhost:1337/auctions` in the request URL.\
+request with a `GET` method to `http://localhost:9000/auctions` in the request URL.\
 Set the request body to `none`. The response will contain all currently listed auctions or return\
 an empty body if there are no auctions listed.
 
 ### Retrieve a specific auction
 In order to get a specific item of an auction, open `Postman` and create a new\
-request with a `GET` method to `http://localhost:1337/auctions/:item` in the request URL.\
+request with a `GET` method to `http://localhost:9000/auctions/:item` in the request URL.\
 Set the request body to `none`. The `item` field in the URL must match an existing auction.
 
 ### Updating an existing auction
 In order to update a specific auction, open `Postman` and create a new\
-request with a `PATCH` method to `http://localhost:1337/auctions/:item` in the request URL.\
+request with a `PATCH` method to `http://localhost:9000/auctions/:item` in the request URL.\
 Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```
@@ -71,7 +71,7 @@ The request body should be raw JSON with the correct format:
 
 ### Adding a bidder for an existing auction
 In order to add a bidder to an existing auction, open `Postman` and create a new\
-request with a `POST` method to `http://localhost:1337/auctions/:item/bidders` in the request URL.\
+request with a `POST` method to `http://localhost:9000/auctions/:item/bidders` in the request URL.\
 Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```
@@ -82,7 +82,7 @@ The request body should be raw JSON with the correct format:
 
 ### Placing a bid on an existing auction
 In order to place a bid to an existing auction, open `Postman` and create a new\
-request with a `POST` method to `http://localhost:1337/auctions/:item/bidders/:bidderName/bid` in the request URL.\
+request with a `POST` method to `http://localhost:9000/auctions/:item/bidders/:bidderName/bid` in the request URL.\
 Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```

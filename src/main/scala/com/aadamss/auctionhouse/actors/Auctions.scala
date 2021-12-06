@@ -1,8 +1,8 @@
 package com.aadamss.auctionhouse.actors
 
-import com.aadamss.auctionhouse.actors.Auctions.IncrementPolicy
 import akka.actor.{Actor, Props}
 import akka.http.scaladsl.model.DateTime
+import com.aadamss.auctionhouse.actors.Auctions.IncrementPolicy
 import com.aadamss.auctionhouse.response.Response._
 import scala.annotation.tailrec
 import scala.concurrent.duration._

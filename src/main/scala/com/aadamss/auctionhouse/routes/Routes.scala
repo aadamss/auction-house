@@ -1,15 +1,14 @@
 package com.aadamss.auctionhouse.routes
 
 import akka.actor.ActorRef
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import akka.util.Timeout
 import akka.pattern.ask
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import akka.util.Timeout
 import com.aadamss.auctionhouse.actors.AuctionHouse._
 import com.aadamss.auctionhouse.marshaller.Marshaller
 import com.aadamss.auctionhouse.response.Response._
-
 import scala.concurrent.ExecutionContext
 
 trait Routes extends Marshaller {
@@ -25,9 +24,9 @@ trait Routes extends Marshaller {
   def auctionHouseAPIRoutes: Route =
     auctionsRoute ~ auctionRoute ~ bidderRoute ~ bidRoute
 
-  def handleExceptions(r: Response): StandardRoute =
-    r match {
-      case e: ErrorResponse => complete(e.statusCode, e)
+  def handleExceptions(response: Response): StandardRoute =
+    response match {
+      case errorResponse: ErrorResponse => complete(errorResponse.statusCode, errorResponse)
       case _                => complete(UnknownError().statusCode, UnknownError().message)
     }
 
@@ -49,15 +48,15 @@ trait Routes extends Marshaller {
                 )
                 .mapTo[Response],
             ) {
-              case s: AuctionCreated => complete(s.statusCode, s.auction)
-              case r                 => handleExceptions(r)
+              case auctionCreated: AuctionCreated => complete(auctionCreated.statusCode, auctionCreated.auction)
+              case errorResponse                 => handleExceptions(errorResponse)
             }
           }
         } ~
           get {
             onSuccess(auctionHouse.ask(GetAuctions).mapTo[Response]) {
-              case s: AuctionsFound => complete(s.statusCode, s.auctions)
-              case r                => handleExceptions(r)
+              case auctionsFound: AuctionsFound => complete(auctionsFound.statusCode, auctionsFound.auctions)
+              case errorResponse                => handleExceptions(errorResponse)
             }
           }
       }
@@ -66,11 +65,10 @@ trait Routes extends Marshaller {
   def auctionRoute: Route =
     pathPrefix("auctions" / Segment) { item =>
       pathEndOrSingleSlash {
-        // GET /auctions/:item
         get {
           onSuccess(auctionHouse.ask(GetAuction(item)).mapTo[Response]) {
-            case s: AuctionFound => complete(s.statusCode, s.auction)
-            case r               => handleExceptions(r)
+            case auctionsFound: AuctionFound => complete(auctionsFound.statusCode, auctionsFound.auction)
+            case errorResponse               => handleExceptions(errorResponse)
           }
         } ~
           patch {
@@ -88,8 +86,8 @@ trait Routes extends Marshaller {
                   )
                   .mapTo[Response],
               ) {
-                case s: AuctionUpdated => complete(s.statusCode, s.auction)
-                case r                 => handleExceptions(r)
+                case auctionUpdated: AuctionUpdated => complete(auctionUpdated.statusCode, auctionUpdated.auction)
+                case errorResponse                 => handleExceptions(errorResponse)
               }
             }
           }
@@ -106,8 +104,8 @@ trait Routes extends Marshaller {
                 .ask(JoinAuction(item, params.bidderName))
                 .mapTo[Response],
             ) {
-              case s: AuctionJoined => complete(s.statusCode, s.bidder)
-              case r                => handleExceptions(r)
+              case auctionJoined: AuctionJoined => complete(auctionJoined.statusCode, auctionJoined.bidder)
+              case errorResponse                => handleExceptions(errorResponse)
             }
           }
         }
@@ -124,8 +122,8 @@ trait Routes extends Marshaller {
                 .ask(PlaceBid(item, bidder, params.value))
                 .mapTo[Response],
             ) {
-              case s: BidPlaced => complete(s.statusCode, s.bid)
-              case r            => handleExceptions(r)
+              case bidPlaced: BidPlaced => complete(bidPlaced.statusCode, bidPlaced.bid)
+              case errorResponse            => handleExceptions(errorResponse)
             }
           }
         }

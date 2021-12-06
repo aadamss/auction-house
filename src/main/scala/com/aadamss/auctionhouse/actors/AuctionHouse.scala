@@ -1,10 +1,10 @@
 package com.aadamss.auctionhouse.actors
 
-import com.aadamss.auctionhouse.actors.Auctions.{IncrementPolicy, WinningBid}
 import akka.actor.{Actor, ActorRef, Props}
 import akka.http.scaladsl.model.DateTime
-import akka.util.Timeout
 import akka.pattern.{ask, pipe}
+import akka.util.Timeout
+import com.aadamss.auctionhouse.actors.Auctions.{IncrementPolicy, WinningBid}
 import com.aadamss.auctionhouse.response.Response._
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -95,8 +95,8 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
           } yield self
             .ask(GetAuction(child.path.name))
             .mapTo[AuctionFound]
-            .map(af => Success(af.auction))
-            .recover { case e => Failure(e) }
+            .map(auctionFound => Success(auctionFound.auction))
+            .recover { case exception => Failure(exception) }
         } map { f => AuctionsFound(f.filter(_.isSuccess).map(_.get).toSet) }
 
       pipe(getAuctions) to sender()
