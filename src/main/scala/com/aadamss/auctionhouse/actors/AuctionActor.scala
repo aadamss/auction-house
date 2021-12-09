@@ -123,8 +123,8 @@ class AuctionActor(
       state.auctionState match {
         case Upcoming =>
           newStartingPrice match {
-            case Some(newSP) if newSP < 0 =>
-              sender() ! NegativeStartingPrice(newSP)
+            case Some(newStartPrice) if newStartPrice < 0 =>
+              sender() ! NegativeStartingPrice(newStartPrice)
             case _ =>
               val startingPriceSate = newStartingPrice match {
                 case Some(startPrice) => state.copy(startingPrice = startPrice)
