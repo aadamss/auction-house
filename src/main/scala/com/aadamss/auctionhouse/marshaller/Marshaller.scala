@@ -2,8 +2,8 @@ package com.aadamss.auctionhouse.marshaller
 
 import akka.http.scaladsl.model.DateTime
 import com.aadamss.auctionhouse.actors.AuctionHouse._
-import com.aadamss.auctionhouse.actors.Auctions
-import com.aadamss.auctionhouse.actors.Auctions._
+import com.aadamss.auctionhouse.actors.AuctionActor
+import com.aadamss.auctionhouse.actors.AuctionActor._
 import com.aadamss.auctionhouse.response.Response._
 import spray.json._
 
@@ -45,7 +45,7 @@ trait Marshaller extends DefaultJsonProtocol {
 
     def read(json: JsValue): AuctionState = json match {
       case JsString(value) =>
-        Auctions.availableAuctionStates.find(_.key == value) match {
+        AuctionActor.availableAuctionStates.find(_.key == value) match {
           case Some(state) => state
           case None        => deserializationError("Auction state not found!")
         }

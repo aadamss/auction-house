@@ -2,7 +2,7 @@ package com.aadamss.auctionhouse
 
 import akka.http.scaladsl.model.DateTime
 import com.aadamss.auctionhouse.actors.AuctionHouse.Auction
-import com.aadamss.auctionhouse.actors.Auctions.{FreeIncrement, _}
+import com.aadamss.auctionhouse.actors.AuctionActor.{FreeIncrement, _}
 import com.aadamss.auctionhouse.marshaller.Marshaller
 import com.aadamss.auctionhouse.response.Response._
 import org.scalatest.matchers.must.Matchers

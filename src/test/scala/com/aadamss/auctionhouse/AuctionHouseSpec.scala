@@ -5,8 +5,8 @@ import akka.http.scaladsl.model.DateTime
 import akka.testkit.{DefaultTimeout, ImplicitSender, TestKit, TestProbe}
 import akka.util.Timeout
 import com.aadamss.auctionhouse.actors.AuctionHouse._
-import com.aadamss.auctionhouse.actors.Auctions.{FreeIncrement, IncrementPolicy}
-import com.aadamss.auctionhouse.actors.{AuctionHouse, Auctions}
+import com.aadamss.auctionhouse.actors.AuctionActor.{FreeIncrement, IncrementPolicy}
+import com.aadamss.auctionhouse.actors.{AuctionHouse, AuctionActor}
 import com.aadamss.auctionhouse.response.Response._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.must.Matchers
@@ -58,7 +58,7 @@ class AuctionHouseSpec
         "test",
         100,
         FreeIncrement,
-        Auctions.Upcoming,
+        AuctionActor.Upcoming,
         DateTime.now.plus((1 day).toMillis),
         DateTime.now.plus((2 days).toMillis),
         Set(),
@@ -79,7 +79,7 @@ class AuctionHouseSpec
         auction.startDate,
         auction.endDate
       )
-      probe.expectMsg(Auctions.Get)
+      probe.expectMsg(AuctionActor.Get)
       probe.reply(AuctionFound(defaultAuction))
       expectMsg(AuctionCreated(defaultAuction))
     }
@@ -99,7 +99,7 @@ class AuctionHouseSpec
       createAuction(auctionHouseActor, probe)(defaultAuction)
 
       auctionHouseActor ! GetAuction(defaultAuction.item)
-      probe.expectMsg(Auctions.Get)
+      probe.expectMsg(AuctionActor.Get)
       probe.reply(AuctionFound(defaultAuction))
       expectMsg(AuctionFound(defaultAuction))
     }
@@ -115,9 +115,9 @@ class AuctionHouseSpec
       )
 
       auctionHouseActor ! GetAuctions
-      probe.expectMsg(Auctions.Get)
+      probe.expectMsg(AuctionActor.Get)
       probe.reply(AuctionFound(defaultAuction))
-      probe.expectMsg(Auctions.Get)
+      probe.expectMsg(AuctionActor.Get)
       probe.reply(AuctionFound(defaultAuction.copy(item = itemName2)))
       expectMsg(AuctionsFound(
         Set(defaultAuction, defaultAuction.copy(item = itemName2))
@@ -134,7 +134,7 @@ class AuctionHouseSpec
       auctionHouseActor ! UpdateAuction(
         defaultAuction.item, Some(newPrice), None, None, None
       )
-      probe.expectMsg(Auctions.Update(Some(newPrice), None, None))
+      probe.expectMsg(AuctionActor.Update(Some(newPrice), None, None))
       probe.reply(AuctionUpdated(
         defaultAuction.copy(startingPrice = newPrice)
       ))
@@ -144,12 +144,12 @@ class AuctionHouseSpec
     "forward an AuctionActor.Join message when it receives a JoinAuction message" in {
       val probe = TestProbe()
       val auctionHouseActor: ActorRef = createWithProbe(probe)
-      val testBidder = Auctions.Bidder("testBidder")
+      val testBidder = AuctionActor.Bidder("testBidder")
 
       createAuction(auctionHouseActor, probe)(defaultAuction)
 
       auctionHouseActor ! JoinAuction(defaultAuction.item, testBidder.name)
-      probe.expectMsg(Auctions.Join(testBidder.name))
+      probe.expectMsg(AuctionActor.Join(testBidder.name))
       probe.reply(AuctionJoined(testBidder))
       expectMsg(AuctionJoined(testBidder))
     }
@@ -157,8 +157,8 @@ class AuctionHouseSpec
     "forward a AuctionActor.PlaceBid message when it receives a PlaceBid message" in {
       val probe = TestProbe()
       val auctionHouseActor: ActorRef = createWithProbe(probe)
-      val testBidder = Auctions.Bidder("testBidder")
-      val testBid = Auctions.Bid(testBidder.name, 100)
+      val testBidder = AuctionActor.Bidder("testBidder")
+      val testBid = AuctionActor.Bid(testBidder.name, 100)
 
       createAuction(auctionHouseActor, probe)(defaultAuction)
 
@@ -167,7 +167,7 @@ class AuctionHouseSpec
         testBid.bidderName,
         testBid.value
       )
-      probe.expectMsg(Auctions.PlaceBid(testBid.bidderName, testBid.value))
+      probe.expectMsg(AuctionActor.PlaceBid(testBid.bidderName, testBid.value))
       probe.reply(BidPlaced(testBid))
       expectMsg(BidPlaced(testBid))
     }
@@ -235,7 +235,7 @@ class AuctionHouseSpec
     "send back an AuctionNotFound message upon receiving a JoinAuction message, if the auction isn't listed" in {
       val probe = TestProbe()
       val auctionHouseActor: ActorRef = createWithProbe(probe)
-      val testBidder = Auctions.Bidder("testBidder")
+      val testBidder = AuctionActor.Bidder("testBidder")
 
       auctionHouseActor ! JoinAuction(defaultAuction.item, testBidder.name)
       expectMsg(AuctionNotFound(defaultAuction.item))
@@ -244,8 +244,8 @@ class AuctionHouseSpec
     "send back an AuctionNotFound message upon receiving a PlaceBid message, if the auction isn't listed" in {
       val probe = TestProbe()
       val auctionHouseActor: ActorRef = createWithProbe(probe)
-      val testBidder = Auctions.Bidder("testBidder")
-      val testBid = Auctions.Bid(testBidder.name, 100)
+      val testBidder = AuctionActor.Bidder("testBidder")
+      val testBid = AuctionActor.Bid(testBidder.name, 100)
 
       auctionHouseActor ! PlaceBid(
         defaultAuction.item,

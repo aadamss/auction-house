@@ -33,7 +33,7 @@ The request body should be raw JSON with the correct format:
 {
 	"item": "BMW-M5-CS",
 	"incrementPolicy": {
-		"incrementType": "MinimalIncrement",
+		"incrementType": "MinimumIncrement",
 		"minimumBid": 10000
 	},
 	"startingPrice": 125000,

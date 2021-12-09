@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorRef, Props}
 import akka.http.scaladsl.model.DateTime
 import akka.pattern.{ask, pipe}
 import akka.util.Timeout
-import com.aadamss.auctionhouse.actors.Auctions.{IncrementPolicy, WinningBid}
+import com.aadamss.auctionhouse.actors.AuctionActor.{IncrementPolicy, WinningBid}
 import com.aadamss.auctionhouse.response.Response._
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -15,15 +15,15 @@ object AuctionHouse {
   def name = "auctionHouse"
 
   case class Auction(
-    item: String,
-    startingPrice: Int,
-    incrementPolicy: IncrementPolicy,
-    auctionState: Auctions.AuctionState,
-    startDate: DateTime,
-    endDate: DateTime,
-    bidders: Set[Auctions.Bidder],
-    bids: Vector[Auctions.Bid],
-    winningBid: Option[WinningBid],
+                      item: String,
+                      startingPrice: Int,
+                      incrementPolicy: IncrementPolicy,
+                      auctionState: AuctionActor.AuctionState,
+                      startDate: DateTime,
+                      endDate: DateTime,
+                      bidders: Set[AuctionActor.Bidder],
+                      bids: Vector[AuctionActor.Bid],
+                      winningBid: Option[WinningBid],
   )
 
   case class CreateAuction(
@@ -64,7 +64,7 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
     startDate: DateTime,
     endDate: DateTime,
   ): ActorRef =
-    context.actorOf(Auctions.props(item, startingPrice, incrementPolicy, startDate, endDate), item)
+    context.actorOf(AuctionActor.props(item, startingPrice, incrementPolicy, startDate, endDate), item)
 
   def receive: PartialFunction[Any, Unit] = {
     case CreateAuction(item, startingPrice, incrementPolicy, startDate, endDate) =>
@@ -80,7 +80,7 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
                 incrementPolicy,
                 startDate,
                 endDate,
-              ).ask(Auctions.Get)
+              ).ask(AuctionActor.Get)
                 .mapTo[AuctionFound]
                 .map(af => AuctionCreated(af.auction))
 
@@ -104,7 +104,7 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
     case GetAuction(item) =>
       context
         .child(item)
-        .fold(sender() ! AuctionNotFound(item))(_ forward Auctions.Get)
+        .fold(sender() ! AuctionNotFound(item))(_ forward AuctionActor.Get)
 
     case UpdateAuction(
           item,
@@ -118,7 +118,7 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
         .fold(
           sender() ! AuctionNotFound(item),
         )(
-          _ forward Auctions
+          _ forward AuctionActor
             .Update(startingPrice, incrementPolicy, startDate, endDate),
         )
 
@@ -128,7 +128,7 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
         .fold(
           sender() ! AuctionNotFound(item),
         )(
-          _ forward Auctions.Join(username),
+          _ forward AuctionActor.Join(username),
         )
 
     case PlaceBid(item, username, bid) =>
@@ -137,7 +137,7 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
         .fold(
           sender() ! AuctionNotFound(item),
         )(
-          _ forward Auctions.PlaceBid(username, bid),
+          _ forward AuctionActor.PlaceBid(username, bid),
         )
   }
 }

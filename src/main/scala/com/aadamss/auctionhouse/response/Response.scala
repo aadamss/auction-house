@@ -1,7 +1,7 @@
 package com.aadamss.auctionhouse.response
 
 import akka.http.scaladsl.model.{StatusCode, StatusCodes}
-import com.aadamss.auctionhouse.actors.{Auctions, AuctionHouse}
+import com.aadamss.auctionhouse.actors.{AuctionActor, AuctionHouse}
 
 object Response {
 
@@ -19,9 +19,9 @@ object Response {
 
   case class AuctionUpdated(auction: AuctionHouse.Auction) extends SuccessResponse(OK)
 
-  case class AuctionJoined(bidder: Auctions.Bidder) extends SuccessResponse(Created)
+  case class AuctionJoined(bidder: AuctionActor.Bidder) extends SuccessResponse(Created)
 
-  case class BidPlaced(bid: Auctions.Bid) extends SuccessResponse(Created)
+  case class BidPlaced(bid: AuctionActor.Bid) extends SuccessResponse(Created)
 
   sealed class ErrorResponse(val message: String, val statusCode: StatusCode) extends Response
 
@@ -39,13 +39,13 @@ object Response {
 
   case class AuctionNotFound(item: String) extends ErrorResponse(s"An auction for the $item doesn't exist!", NotFound)
 
-  case class NotPermittedByState(auctionState: Auctions.AuctionState)
+  case class NotPermittedByState(auctionState: AuctionActor.AuctionState)
       extends ErrorResponse(
         s"The auction state ${auctionState.key} doesn't allow the action!",
         Locked,
       )
 
-  case class BidderAlreadyJoined(bidder: Auctions.Bidder)
+  case class BidderAlreadyJoined(bidder: AuctionActor.Bidder)
       extends ErrorResponse(
         s"${bidder.name} has already joined this auction!",
         UnprocessableEntity,

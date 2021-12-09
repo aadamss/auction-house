@@ -8,7 +8,7 @@ import akka.testkit.{TestKit, TestProbe}
 import akka.util.Timeout
 import com.aadamss.auctionhouse.actors.AuctionHouse
 import com.aadamss.auctionhouse.actors.AuctionHouse._
-import com.aadamss.auctionhouse.actors.Auctions._
+import com.aadamss.auctionhouse.actors.AuctionActor._
 import com.aadamss.auctionhouse.api.RequestTimeout
 import com.aadamss.auctionhouse.response.Response._
 import com.aadamss.auctionhouse.routes.RestRoutes

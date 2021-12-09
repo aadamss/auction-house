@@ -4,8 +4,8 @@ import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.model.DateTime
 import akka.testkit.{DefaultTimeout, ImplicitSender, TestKit}
 import com.aadamss.auctionhouse.actors.AuctionHouse.Auction
-import com.aadamss.auctionhouse.actors.Auctions
-import com.aadamss.auctionhouse.actors.Auctions._
+import com.aadamss.auctionhouse.actors.AuctionActor
+import com.aadamss.auctionhouse.actors.AuctionActor._
 import com.aadamss.auctionhouse.response.Response._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.must.Matchers
@@ -13,7 +13,7 @@ import org.scalatest.wordspec.AnyWordSpecLike
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class AuctionsSpec extends TestKit(ActorSystem("testAuctions"))
+class AuctionActorSpec extends TestKit(ActorSystem("testAuctions"))
   with AnyWordSpecLike
   with Matchers
   with ImplicitSender
@@ -27,7 +27,7 @@ class AuctionsSpec extends TestKit(ActorSystem("testAuctions"))
 
   def createAuctionActor(a: Auction): ActorRef =
     system.actorOf(
-      Auctions.props(
+      AuctionActor.props(
         a.item,
         a.startingPrice,
         a.incrementPolicy,
