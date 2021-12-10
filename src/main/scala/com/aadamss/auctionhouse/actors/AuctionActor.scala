@@ -67,7 +67,7 @@ class AuctionActor(
     auctionState: AuctionState = initialAuctionState,
     bidders: Set[Bidder] = Set.empty[Bidder],
     bids: List[Bid] = List.empty[Bid],
-    winner: Option[WinningBid] = None
+    winner: Option[WinningBid] = None,
   )
 
   system.scheduler.scheduleWithFixedDelay(0 seconds, 500 milliseconds, self, UpdateState)
@@ -128,19 +128,19 @@ class AuctionActor(
             case _ =>
               val startingPriceSate = newStartingPrice match {
                 case Some(startPrice) => state.copy(startingPrice = startPrice)
-                case None => state
+                case None             => state
               }
               val incrementPolicyState = newIncrementPolicy match {
                 case Some(incPolicy) => startingPriceSate.copy(incrementPolicy = incPolicy)
-                case None => startingPriceSate
+                case None            => startingPriceSate
               }
               val startDateState = newStartDate match {
                 case Some(startingDate) => incrementPolicyState.copy(startDate = startingDate)
-                case None => incrementPolicyState
+                case None               => incrementPolicyState
               }
               val endDateState = newEndDate match {
                 case Some(endingDate) => startDateState.copy(endDate = endingDate)
-                case None => startDateState
+                case None             => startDateState
               }
               val newState = endDateState
               updateAuctionState(state)
