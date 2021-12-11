@@ -37,7 +37,7 @@ The request body should be raw JSON with the correct format:
 		"minimumBid": 10000
 	},
 	"startingPrice": 125000,
-	"startDate": "2021-12-31T12:00:00",
+	"startDate": "2021-12-01T12:00:00",
 	"endDate": "2022-01-31T12:00:00"
 }
 ```
@@ -52,12 +52,12 @@ an empty body if there are no auctions listed.
 
 ### Retrieve a specific auction
 In order to get a specific item of an auction, open `Postman` and create a new\
-request with a `GET` method to `http://localhost:9000/auctions/:item` in the request URL.\
+request with a `GET` method to `http://localhost:9000/auctions/item` in the request URL.\
 Set the request body to `none`. The `item` field in the URL must match an existing auction.
 
 ### Updating an existing auction
 In order to update a specific auction, open `Postman` and create a new\
-request with a `PATCH` method to `http://localhost:9000/auctions/:item` in the request URL.\
+request with a `PATCH` method to `http://localhost:9000/auctions/item` in the request URL.\
 Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```
@@ -66,14 +66,14 @@ The request body should be raw JSON with the correct format:
 	"incrementPolicy": {
 		"incrementType": "FreeIncrement"
 	},
-	"startDate": "2021-12-31T12:00:00",
+	"startDate": "2021-12-01T12:00:00",
 	"endDate": "2022-01-31T12:00:00"
 }
 ```
 
 ### Adding a bidder for an existing auction
 In order to add a bidder to an existing auction, open `Postman` and create a new\
-request with a `POST` method to `http://localhost:9000/auctions/:item/bidders` in the request URL.\
+request with a `POST` method to `http://localhost:9000/auctions/item/bidders` in the request URL.\
 Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```
@@ -84,7 +84,7 @@ The request body should be raw JSON with the correct format:
 
 ### Placing a bid on an existing auction
 In order to place a bid to an existing auction, open `Postman` and create a new\
-request with a `POST` method to `http://localhost:9000/auctions/:item/bidders/:bidderName/bid` in the request URL.\
+request with a `POST` method to `http://localhost:9000/auctions/item/bidders/bidderName/bids` in the request URL.\
 Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```
