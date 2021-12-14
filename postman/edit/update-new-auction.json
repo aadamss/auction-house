@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "855adfd7-c78c-4204-8926-28080270ab2e",
+		"name": "Update the new auction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Update the new auction",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startingPrice\": 180000,\n\t\"incrementPolicy\": {\n\t\t\"incrementType\": \"FreeIncrement\"\n\t},\n\t\"startDate\": \"2021-12-31T12:00:00\",\n\t\"endDate\": \"2022-04-30T12:00:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/auctions/BMW-M8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"auctions",
+						"BMW-M8"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

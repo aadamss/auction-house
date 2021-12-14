@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "3383c550-e452-4c2c-9432-7f51a4143685",
+		"name": "Add a bidder to an auction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add a bidder to an auction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"bidderName\": \"Arthur\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/auctions/BMW-M5-CS/bidders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"auctions",
+						"BMW-M5-CS",
+						"bidders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

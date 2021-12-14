@@ -1,0 +1,29 @@
+{
+	"info": {
+		"_postman_id": "da9c5811-1bf7-476d-a797-5e8ef42def79",
+		"name": "Get a specific auction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get a specific auction",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/auctions/BMW-M5-CS",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"auctions",
+						"BMW-M5-CS"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
