@@ -11,6 +11,11 @@ import com.aadamss.auctionhouse.marshaller.Marshaller
 import com.aadamss.auctionhouse.response.Response._
 import scala.concurrent.ExecutionContext
 
+/** Defines the routes of the auction house where you can manage auctions, bidders, and bids for an auction.
+  * Translates the REST requests into actor messages sent to the [[com.aadamss.auctionhouse.actors.AuctionHouse]] actor
+  * following the "ask Pattern",
+  * and translates back the actor responses to HTTP status codes and HTTP response bodies.
+  */
 trait Routes extends Marshaller {
 
   implicit def executionContext: ExecutionContext
@@ -21,15 +26,20 @@ trait Routes extends Marshaller {
 
   lazy val auctionHouse: ActorRef = createAuctionHouse()
 
+  /** Defines all domain-related routes for the auction house. */
   def auctionHouseAPIRoutes: Route =
     auctionsRoute ~ auctionRoute ~ bidderRoute ~ bidRoute
 
+  /** Completes the HTTP request erroneously taking the erroneous HTTP status code and the error message from the parameter `response`.
+    * This response has been produced by a domain actor.
+    */
   def handleExceptions(response: Response): StandardRoute =
     response match {
       case errorResponse: ErrorResponse => complete(errorResponse.statusCode, errorResponse)
-      case _                => complete(UnknownError().statusCode, UnknownError().message)
+      case _                            => complete(UnknownError().statusCode, UnknownError().message)
     }
 
+  /** Defines the route `POST /auctions` for creating an auction. */
   def auctionsRoute: Route =
     pathPrefix("auctions") {
       pathEndOrSingleSlash {
@@ -49,7 +59,7 @@ trait Routes extends Marshaller {
                 .mapTo[Response],
             ) {
               case auctionCreated: AuctionCreated => complete(auctionCreated.statusCode, auctionCreated.auction)
-              case errorResponse                 => handleExceptions(errorResponse)
+              case errorResponse                  => handleExceptions(errorResponse)
             }
           }
         } ~
@@ -62,6 +72,7 @@ trait Routes extends Marshaller {
       }
     }
 
+  /** Defines the routes `GET /auctions/{item}` and `PATCH /auctions/{item}`for managing an individual auction. */
   def auctionRoute: Route =
     pathPrefix("auctions" / Segment) { item =>
       pathEndOrSingleSlash {
@@ -87,13 +98,14 @@ trait Routes extends Marshaller {
                   .mapTo[Response],
               ) {
                 case auctionUpdated: AuctionUpdated => complete(auctionUpdated.statusCode, auctionUpdated.auction)
-                case errorResponse                 => handleExceptions(errorResponse)
+                case errorResponse                  => handleExceptions(errorResponse)
               }
             }
           }
       }
     }
 
+  /** Defines the route `POST /auctions/{item}/bidders` for adding a new bidder to the named auction. */
   def bidderRoute: Route =
     pathPrefix("auctions" / Segment / "bidders") { item =>
       pathEndOrSingleSlash {
@@ -112,6 +124,7 @@ trait Routes extends Marshaller {
       }
     }
 
+  /** Defines the route `POST /auctions/{item}/bidders/{bidder}` for placing a new bid of the named bidder to the named auction. */
   def bidRoute: Route =
     pathPrefix("auctions" / Segment / "bidders" / Segment / "bids") { (item, bidder) =>
       pathEndOrSingleSlash {
@@ -123,7 +136,7 @@ trait Routes extends Marshaller {
                 .mapTo[Response],
             ) {
               case bidPlaced: BidPlaced => complete(bidPlaced.statusCode, bidPlaced.bid)
-              case errorResponse            => handleExceptions(errorResponse)
+              case errorResponse        => handleExceptions(errorResponse)
             }
           }
         }

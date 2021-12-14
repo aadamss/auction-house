@@ -8,6 +8,7 @@ import scala.annotation.tailrec
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
+/** Creates a [[Props]] object for configuring an [[AuctionActor]]. */
 object AuctionActor {
   def props(
     item: String,
@@ -19,31 +20,56 @@ object AuctionActor {
     new AuctionActor(item, startingPrice, incrementPolicy, startDate, endDate),
   )
 
+  /** Model of a bidder bidding in an auction. */
   case class Bidder(name: String)
+
+  /** Model of a bid placed in an auction. */
   case class Bid(bidderName: String, value: Int)
+
+  /** Model of the fact that the given `bidder` has won an auction with the given `bid`. */
   case class WinningBid(bidder: Bidder, bid: Bid)
 
+  /** Logical state of an auction */
   sealed abstract class AuctionState(val key: String)
 
+  /** The auction did not yet begin, as the `startDate` is not reached. */
   case object Upcoming extends AuctionState("Upcoming")
+
+  /** The auction is in progress, as the `startDate` has passed, but the `endDate` has not yet been reached. */
   case object Open extends AuctionState("Open")
+
+  /** The auction has ended, as the `endDate` has passed. */
   case object Ended extends AuctionState("Ended")
 
   val availableAuctionStates: Vector[AuctionState] = Vector(Upcoming, Open, Ended)
 
+  /** Model of possible increment policies for an auction. */
   sealed abstract class IncrementPolicy(val incrementType: String)
+
+  /** Model of a free increment policy (by any value >0) for an auction. */
   case object FreeIncrement extends IncrementPolicy("FreeIncrement")
+
+  /** Model of a minimum increment policy for an auction. */
   case class MinimumIncrement(minimumBid: Int) extends IncrementPolicy("MinimumIncrement")
 
+  /** Query for the state of the auction managed by the current actor. */
   case object Get
+
+  /** Command forcing the auction actor to recompute its [[AuctionState]] based on the current time. */
   case object UpdateState
+
+  /** Command to update the given attributes of the auction. */
   case class Update(
     startingPrice: Option[Int] = None,
     incrementPolicy: Option[IncrementPolicy] = None,
     startDate: Option[DateTime] = None,
     endDate: Option[DateTime] = None,
   )
+
+  /** Command to register the given `username` as bidder for the auction. */
   case class Join(username: String)
+
+  /** Command to register that the bidder with the  given `username` offers to pay `bid` units for the auctionated item. */
   case class PlaceBid(username: String, bid: Int)
 
 }
@@ -59,6 +85,10 @@ class AuctionActor(
   import AuctionActor._
   import context._
 
+  /** Holds all values which are part of the actor's state.
+    * All are optional given with their initial value as default value.
+    * So [[State()]] will create the initial state for the actor.
+    */
   private case class State(
     startingPrice: Int = startingPrice,
     incrementPolicy: IncrementPolicy = incrementPolicy,
@@ -72,6 +102,7 @@ class AuctionActor(
 
   system.scheduler.scheduleWithFixedDelay(0 seconds, 500 milliseconds, self, UpdateState)
 
+  /** Creates a data transfer object containing the current complete state of the auction. */
   private def auction(state: State): AuctionHouse.Auction =
     AuctionHouse.Auction(
       item,
@@ -85,6 +116,7 @@ class AuctionActor(
       state.winner,
     )
 
+  /** Returns the next state of the auction depending on the passed `state` and the current time. */
   private def updateAuctionState(state: State): State =
     state.auctionState match {
       case Upcoming if DateTime.now > state.startDate => state.copy(auctionState = Open)
@@ -110,8 +142,14 @@ class AuctionActor(
       case _ => state
     }
 
+  /** Function defining the initial behavior of this actor.
+    * The actor will initially and later accept messages of types [[Get]], [[UpdateState]], [[Update]], [[Join]], and [[PlaceBid]].
+    */
   def receive: Receive = stateDependentBehavior(State())
 
+  /** Helper function for defining the behavior depending on the current actor state without using variables.
+    * Initially it was expressed by variables in the actor and now is passed as a modified `state` argument.
+    */
   private def stateDependentBehavior(state: State): Receive = {
     case Get => sender() ! AuctionFound(auction(state))
 
@@ -191,6 +229,7 @@ class AuctionActor(
       }
   }
 
+  /** Computes the initial logical [[AuctionState]] depending on the current time. */
   private def initialAuctionState: AuctionState =
     if (DateTime.now > endDate) Ended
     else if (DateTime.now > startDate) Open

@@ -9,23 +9,28 @@ import com.aadamss.auctionhouse.response.Response._
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
+/** Companion object for the [[AuctionHouse]] actor. */
 object AuctionHouse {
+
+  /** Creates a [[Props]] object for configuring the [[AuctionHouse]] actor. */
   def props(implicit timeout: Timeout): Props = Props(new AuctionHouse())
 
   def name = "auctionHouse"
 
+  /** Response message comprising the current state of an auction. */
   case class Auction(
-                      item: String,
-                      startingPrice: Int,
-                      incrementPolicy: IncrementPolicy,
-                      auctionState: AuctionActor.AuctionState,
-                      startDate: DateTime,
-                      endDate: DateTime,
-                      bidders: Set[AuctionActor.Bidder],
-                      bids: Vector[AuctionActor.Bid],
-                      winningBid: Option[WinningBid],
+    item: String,
+    startingPrice: Int,
+    incrementPolicy: IncrementPolicy,
+    auctionState: AuctionActor.AuctionState,
+    startDate: DateTime,
+    endDate: DateTime,
+    bidders: Set[AuctionActor.Bidder],
+    bids: Vector[AuctionActor.Bid],
+    winningBid: Option[WinningBid],
   )
 
+  /** Command for creation of an auction. */
   case class CreateAuction(
     item: String,
     startingPrice: Int,
@@ -34,10 +39,13 @@ object AuctionHouse {
     endDate: DateTime,
   )
 
+  /** Query for getting descriptions of all auctions in the system. */
   case object GetAuctions
 
+  /** Query for getting the current state of the auction for the given `item`. */
   case class GetAuction(item: String)
 
+  /** Command for updating some or all of the attributes of the auction for the given `item`. */
   case class UpdateAuction(
     item: String,
     startingPrice: Option[Int],
@@ -46,17 +54,23 @@ object AuctionHouse {
     endDate: Option[DateTime],
   )
 
+  /** Command for registering the bidder with `bidderName` as bidder for the action of the given `item`. */
   case class JoinAuction(item: String, bidderName: String)
 
+  /** Command for placing a bid by `bidderName` for the given `item` where (s)he offers the given `value`. */
   case class PlaceBid(item: String, bidderName: String, value: Int)
 
 }
 
+/** The actor class for the functionality of the auction house as a whole.
+  * Of this actor should be created only one instance.
+  */
 class AuctionHouse(implicit timeout: Timeout) extends Actor {
 
   import AuctionHouse._
   import context._
 
+  /** Creates the [[AuctionActor]] for selling the given `item` with the other given properties. */
   def createAuction(
     item: String,
     startingPrice: Int,
@@ -66,6 +80,9 @@ class AuctionHouse(implicit timeout: Timeout) extends Actor {
   ): ActorRef =
     context.actorOf(AuctionActor.props(item, startingPrice, incrementPolicy, startDate, endDate), item)
 
+  /** Function defining the behavior of this actor.
+    * Accepts messages of types [[CreateAuction]], [[GetAuctions]], [[GetAuction]], [[UpdateAuction]], [[JoinAuction]], and [[PlaceBid]].
+    */
   def receive: PartialFunction[Any, Unit] = {
     case CreateAuction(item, startingPrice, incrementPolicy, startDate, endDate) =>
       if (startingPrice < 0) sender() ! NegativeStartingPrice(startingPrice)

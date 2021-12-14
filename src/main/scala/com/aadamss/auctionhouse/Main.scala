@@ -10,6 +10,12 @@ import com.aadamss.auctionhouse.routes.RestRoutes
 import com.typesafe.config.{Config, ConfigFactory}
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
+/** Main class for the Auction House application.
+  * It reads the configuration by Typesafe Config,
+  * and starts the Akka HTTP server on the configured host and port with the provided routes.
+  * As the functionality of the Auction House application is implemented in an asynchronous way by Akka the necessary
+  * [[ActorSystem]] is created here, as well.
+  */
 object Main extends App with RestRoutes with RequestTimeout {
 
   implicit val config: Config = ConfigFactory.load()

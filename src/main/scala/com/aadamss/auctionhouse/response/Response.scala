@@ -3,6 +3,10 @@ package com.aadamss.auctionhouse.response
 import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import com.aadamss.auctionhouse.actors.{AuctionActor, AuctionHouse}
 
+/** Defines all responses by which the domain actors may answer to the [[Routes]] following the "Ask Pattern".
+  * Each response is either a [[Response.SuccessResponse]] or an [[Response.ErrorResponse]]
+  * containing already the suitable HTTP response code.
+  */
 object Response {
 
   import StatusCodes._
