@@ -78,7 +78,7 @@ Request header should be `Content-type: application/json`\
 The request body should be raw JSON with the correct format:
 ```
 {
-	"bidderName": "arthur"
+	"bidderName": "Arthur"
 }
 ```
 
@@ -106,3 +106,4 @@ If this project will be developed further, I am planning to add some additional 
 - Buyout system, where items have an additional buyout price, meaning they can be bought right away
 - Some frontend/UI in order to make the application more interactive, instead of just using `Postman`
 - Implement a cluster to make it possible to handle application deployments during ongoing auctions
+- Deploy the application to make it properly usable
