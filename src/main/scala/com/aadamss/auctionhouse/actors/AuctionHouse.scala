@@ -18,7 +18,7 @@ object AuctionHouse {
   def name = "auctionHouse"
 
   /** Response message comprising the current state of an auction. */
-  case class Auction(
+  final case class Auction(
     item: String,
     startingPrice: Int,
     incrementPolicy: IncrementPolicy,
@@ -31,7 +31,7 @@ object AuctionHouse {
   )
 
   /** Command for creation of an auction. */
-  case class CreateAuction(
+  final case class CreateAuction(
     item: String,
     startingPrice: Int,
     incrementPolicy: IncrementPolicy,
@@ -43,10 +43,10 @@ object AuctionHouse {
   case object GetAuctions
 
   /** Query for getting the current state of the auction for the given `item`. */
-  case class GetAuction(item: String)
+  final case class GetAuction(item: String)
 
   /** Command for updating some or all of the attributes of the auction for the given `item`. */
-  case class UpdateAuction(
+  final case class UpdateAuction(
     item: String,
     startingPrice: Option[Int],
     incrementPolicy: Option[IncrementPolicy],
@@ -55,10 +55,10 @@ object AuctionHouse {
   )
 
   /** Command for registering the bidder with `bidderName` as bidder for the action of the given `item`. */
-  case class JoinAuction(item: String, bidderName: String)
+  final case class JoinAuction(item: String, bidderName: String)
 
   /** Command for placing a bid by `bidderName` for the given `item` where (s)he offers the given `value`. */
-  case class PlaceBid(item: String, bidderName: String, value: Int)
+  final case class PlaceBid(item: String, bidderName: String, value: Int)
 
 }
 

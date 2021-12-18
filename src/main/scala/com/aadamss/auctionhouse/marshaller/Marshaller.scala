@@ -7,7 +7,7 @@ import com.aadamss.auctionhouse.actors.AuctionActor._
 import com.aadamss.auctionhouse.response.Response._
 import spray.json._
 
-/** Contains some Data Transfer Object case classes as well as a JsonFormat for each of them as well as many domain case classes.
+/** Contains some Data Transfer Object final case classes as well as a JsonFormat for each of them as well as many domain final case classes.
   * By that a formatting/unformatting mechanism is defined for usage with Spray JSON.
   */
 trait Marshaller extends DefaultJsonProtocol {

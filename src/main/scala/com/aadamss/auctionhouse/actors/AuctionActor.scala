@@ -21,13 +21,13 @@ object AuctionActor {
   )
 
   /** Model of a bidder bidding in an auction. */
-  case class Bidder(name: String)
+  final case class Bidder(name: String)
 
   /** Model of a bid placed in an auction. */
-  case class Bid(bidderName: String, value: Int)
+  final case class Bid(bidderName: String, value: Int)
 
   /** Model of the fact that the given `bidder` has won an auction with the given `bid`. */
-  case class WinningBid(bidder: Bidder, bid: Bid)
+  final case class WinningBid(bidder: Bidder, bid: Bid)
 
   /** Logical state of an auction */
   sealed abstract class AuctionState(val key: String)
@@ -50,7 +50,7 @@ object AuctionActor {
   case object FreeIncrement extends IncrementPolicy("FreeIncrement")
 
   /** Model of a minimum increment policy for an auction. */
-  case class MinimumIncrement(minimumBid: Int) extends IncrementPolicy("MinimumIncrement")
+  final case class MinimumIncrement(minimumBid: Int) extends IncrementPolicy("MinimumIncrement")
 
   /** Query for the state of the auction managed by the current actor. */
   case object Get
@@ -59,7 +59,7 @@ object AuctionActor {
   case object UpdateState
 
   /** Command to update the given attributes of the auction. */
-  case class Update(
+  final case class Update(
     startingPrice: Option[Int] = None,
     incrementPolicy: Option[IncrementPolicy] = None,
     startDate: Option[DateTime] = None,
@@ -67,10 +67,10 @@ object AuctionActor {
   )
 
   /** Command to register the given `username` as bidder for the auction. */
-  case class Join(username: String)
+  final case class Join(username: String)
 
   /** Command to register that the bidder with the  given `username` offers to pay `bid` units for the auctionated item. */
-  case class PlaceBid(username: String, bid: Int)
+  final case class PlaceBid(username: String, bid: Int)
 
 }
 
