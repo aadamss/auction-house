@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "da9c5811-1bf7-476d-a797-5e8ef42def79",
-		"name": "Get a specific auction",
+		"_postman_id": "5ccb8717-1382-40f4-bedf-1e52e432c2c2",
+		"name": "Get auction 1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Get a specific auction",
+			"name": "Get auction 1",
 			"request": {
 				"method": "GET",
 				"header": [],

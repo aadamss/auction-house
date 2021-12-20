@@ -1,18 +1,18 @@
 {
 	"info": {
-		"_postman_id": "855adfd7-c78c-4204-8926-28080270ab2e",
-		"name": "Update the new auction",
+		"_postman_id": "ad3152b0-cd03-4c27-8da2-6f286d7d8bb6",
+		"name": "Place a bid on auction 1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Update the new auction",
+			"name": "Place a bid on auction 1",
 			"request": {
-				"method": "PATCH",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"startingPrice\": 180000,\n\t\"incrementPolicy\": {\n\t\t\"incrementType\": \"FreeIncrement\"\n\t},\n\t\"startDate\": \"2021-12-31T12:00:00\",\n\t\"endDate\": \"2022-04-30T12:00:00\"\n}",
+					"raw": "{\n\t\"value\": 200000\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,7 +20,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9000/auctions/BMW-M8",
+					"raw": "http://localhost:9000/auctions/BMW-M5-CS/bidders/Arthur/bids",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -28,7 +28,10 @@
 					"port": "9000",
 					"path": [
 						"auctions",
-						"BMW-M8"
+						"BMW-M5-CS",
+						"bidders",
+						"Arthur",
+						"bids"
 					]
 				}
 			},
