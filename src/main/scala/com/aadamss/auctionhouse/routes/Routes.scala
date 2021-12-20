@@ -30,7 +30,7 @@ trait Routes extends Marshaller {
   def auctionHouseAPIRoutes: Route =
     auctionsRoute ~ auctionRoute ~ bidderRoute ~ bidRoute
 
-  /** Completes the HTTP request erroneously taking the erroneous HTTP status code and the error message from the parameter `response`.
+  /** Handles failed HTTP responses.
     * This response has been produced by a domain actor.
     */
   def handleExceptions(response: Response): StandardRoute =

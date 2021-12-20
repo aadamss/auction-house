@@ -13,8 +13,8 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 /** Main class for the Auction House application.
   * It reads the configuration by Typesafe Config,
   * and starts the Akka HTTP server on the configured host and port with the provided routes.
-  * As the functionality of the Auction House application is implemented in an asynchronous way by Akka the necessary
-  * [[ActorSystem]] is created here, as well.
+  * As the functionality of the Auction House application is implemented with actors,
+  * an [[ActorSystem]] needs to be created.
   */
 object Main extends App with RestRoutes with RequestTimeout {
 
