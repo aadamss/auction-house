@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "04ab2182-780e-4663-9e6d-216009792264",
+		"name": "place bid on 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Place a bid on auction 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"value\": 200000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/auctions/BMW-M5-CS/bidders/Arthur/bids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"auctions",
+						"BMW-M5-CS",
+						"bidders",
+						"Arthur",
+						"bids"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

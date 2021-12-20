@@ -1,0 +1,28 @@
+{
+	"info": {
+		"_postman_id": "826578d3-1542-4d35-b029-488dfa62aebe",
+		"name": "Get all",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all auctions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/auctions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"auctions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
