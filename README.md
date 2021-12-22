@@ -101,9 +101,9 @@ The request body should be raw JSON with the correct format:
 - **_SprayJson_** Akka Integration version `10.2.7`
 - **_ScalaTest_** version `3.2.10`
 
-## Future plans
-If this project will be developed further, I am planning to add some additional features such as:
-- Buyout system, where items have an additional buyout price, meaning they can be bought right away
-- Some frontend/UI in order to make the application more interactive, instead of just using `Postman`
-- Implement a cluster to make it possible to handle application deployments during ongoing auctions
-- Deploy the application to make it properly usable
+## Future ideas
+Should this project be developed further, here are some additional ideas I'd like to add:
+- Add `bidder statistics` to collect data about who bids the most, the differences in increments and how many auctions are won
+- Implement a `server cluster` to make it possible to handle application deployments during ongoing auctions
+- Create a frontend in `Scala.js` in order to make the application more interactive, instead of just using `Postman`
+- Add `Continuous Delivery` and deploy the application 
