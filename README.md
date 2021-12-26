@@ -23,6 +23,8 @@ with `Postman`, for example.
 - In order to run the tests with `scoverage` plugin, run `sbt clean coverage test`
 - In order to generate the coverage report, run `sbt coverageReport`
 
+[![codecov](https://codecov.io/gh/aadamss/auction-house/branch/main/graph/badge.svg?token=MW2Z7TST7P)](https://codecov.io/gh/aadamss/auction-house)
+
 ## API Endpoints
 The project has multiple API endpoints that can be tested, instructions are provided below.\
 Every endpoint will be tested with `Postman`.
