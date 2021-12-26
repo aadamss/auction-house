@@ -15,6 +15,9 @@ with `Postman`, for example.
 - Inside the project repository, you can run it using `sbt run`
 - The API server will become available at `http://localhost:9000`
 
+### Deployed Application
+- The application is also deployed to `https://auction-house-aadamss.herokuapp.com/`
+
 ### Running the tests
 - In order to run the tests for the project run `sbt test`
 - In order to run the tests with `scoverage` plugin, run `sbt clean coverage test`
