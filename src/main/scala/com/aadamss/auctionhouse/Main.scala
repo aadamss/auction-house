@@ -21,7 +21,7 @@ object Main extends App with RestRoutes with RequestTimeout {
   implicit val config: Config = ConfigFactory.load()
 
   val host = config.getString("http.host")
-  val port = config.getInt("http.port")
+  val port = sys.env.get("PORT").flatMap(_.toIntOption).getOrElse(9000)
 
   implicit val requestTimeout: Timeout = requestTimeoutFromConfig(config)
   implicit val system: ActorSystem = ActorSystem()
