@@ -96,9 +96,9 @@ The request body should be raw JSON with the correct format:
 ## Tech stack used
 - **_Scala_** version `2.13.7`
 - **_SBT_** version `1.5.5`
-- **_Akka_** version `2.6.17`
+- **_Akka_** version `2.6.18`
 - **_AkkaHttp_** version `10.2.7`
-- **_SprayJson_** Akka Integration version `10.2.7`
+- **_SprayJson_** Akka Integration version `10.2.8`
 - **_ScalaTest_** version `3.2.10`
 
 ## Future ideas
@@ -106,4 +106,3 @@ Should this project be developed further, here are some additional ideas I'd lik
 - Add `bidder statistics` to collect data about who bids the most, the differences in increments and how many auctions are won
 - Implement a `server cluster` to make it possible to handle application deployments during ongoing auctions
 - Create a frontend in `Scala.js` in order to make the application more interactive, instead of just using `Postman`
-- Add `Continuous Delivery` and deploy the application 
